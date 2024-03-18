@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>MovieCell.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #0033b3;}
+.s1 { color: #080808;}
+.s2 { color: #067d17;}
+.s3 { color: #8c8c8c; font-style: italic;}
+.s4 { color: #1750eb;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MovieCell.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">at.ac.fhcampuswien.fhmdb.ui;</span>
+
+<span class="s0">import </span><span class="s1">at.ac.fhcampuswien.fhmdb.models.Movie;</span>
+<span class="s0">import </span><span class="s1">javafx.geometry.Insets;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.Label;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.ListCell;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.layout.Background;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.layout.BackgroundFill;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.layout.VBox;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.paint.Color;</span>
+
+<span class="s0">public class </span><span class="s1">MovieCell </span><span class="s0">extends </span><span class="s1">ListCell&lt;Movie&gt; {</span>
+    <span class="s0">private final </span><span class="s1">Label title = </span><span class="s0">new </span><span class="s1">Label();</span>
+    <span class="s0">private final </span><span class="s1">Label detail = </span><span class="s0">new </span><span class="s1">Label();</span>
+    <span class="s0">private final </span><span class="s1">Label genres = </span><span class="s0">new </span><span class="s1">Label();</span>
+    <span class="s0">private final </span><span class="s1">VBox layout = </span><span class="s0">new </span><span class="s1">VBox(title, detail, genres);</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">updateItem(Movie movie, </span><span class="s0">boolean </span><span class="s1">empty) {</span>
+        <span class="s0">super</span><span class="s1">.updateItem(movie, empty);</span>
+
+        <span class="s0">if </span><span class="s1">(empty || movie == </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s1">setText(</span><span class="s0">null</span><span class="s1">);</span>
+            <span class="s1">setGraphic(</span><span class="s0">null</span><span class="s1">);</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s0">this</span><span class="s1">.getStyleClass().add(</span><span class="s2">&quot;movie-cell&quot;</span><span class="s1">);</span>
+            <span class="s1">title.setText(movie.getTitle());</span>
+            <span class="s1">detail.setText(</span>
+                    <span class="s1">movie.getDescription() != </span><span class="s0">null</span>
+                            <span class="s1">? movie.getDescription()</span>
+                            <span class="s1">: </span><span class="s2">&quot;No description available&quot;</span>
+            <span class="s1">);</span>
+            <span class="s3">// set the genres text in the ui</span>
+            <span class="s1">genres.setText(</span>
+                    <span class="s1">movie.getGenres() != </span><span class="s0">null</span>
+                            <span class="s1">? movie.getGenres().toString()</span>
+                            <span class="s1">: </span><span class="s2">&quot;No genres available&quot;</span>
+            <span class="s1">);</span>
+
+            <span class="s3">// color scheme</span>
+            <span class="s1">title.getStyleClass().add(</span><span class="s2">&quot;text-yellow&quot;</span><span class="s1">);</span>
+            <span class="s1">detail.getStyleClass().add(</span><span class="s2">&quot;text-white&quot;</span><span class="s1">);</span>
+
+            <span class="s3">// Make the genres text display in white</span>
+            <span class="s1">genres.getStyleClass().add(</span><span class="s2">&quot;text-white&quot;</span><span class="s1">);</span>
+            <span class="s3">// Remove the brackets from the genres text</span>
+            <span class="s1">String genresText = genres.getText();</span>
+            <span class="s1">genresText = genresText.replace(</span><span class="s2">&quot;[&quot;</span><span class="s1">, </span><span class="s2">&quot;&quot;</span><span class="s1">);</span>
+            <span class="s1">genresText = genresText.replace(</span><span class="s2">&quot;]&quot;</span><span class="s1">, </span><span class="s2">&quot;&quot;</span><span class="s1">);</span>
+            <span class="s1">genres.setText(genresText);</span>
+
+            <span class="s1">layout.setBackground(</span><span class="s0">new </span><span class="s1">Background(</span><span class="s0">new </span><span class="s1">BackgroundFill(Color.web(</span><span class="s2">&quot;#454545&quot;</span><span class="s1">), </span><span class="s0">null</span><span class="s1">, </span><span class="s0">null</span><span class="s1">)));</span>
+
+            <span class="s3">// layout</span>
+            <span class="s1">title.fontProperty().set(title.getFont().font(</span><span class="s4">20</span><span class="s1">));</span>
+            <span class="s1">detail.setMaxWidth(</span><span class="s0">this</span><span class="s1">.getScene().getWidth() - </span><span class="s4">30</span><span class="s1">);</span>
+            <span class="s1">detail.setWrapText(</span><span class="s0">true</span><span class="s1">);</span>
+            <span class="s1">layout.setPadding(</span><span class="s0">new </span><span class="s1">Insets(</span><span class="s4">10</span><span class="s1">));</span>
+            <span class="s1">layout.spacingProperty().set(</span><span class="s4">10</span><span class="s1">);</span>
+            <span class="s1">layout.alignmentProperty().set(javafx.geometry.Pos.CENTER_LEFT);</span>
+            <span class="s1">setGraphic(layout);</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+
+</pre>
+</body>
+</html>

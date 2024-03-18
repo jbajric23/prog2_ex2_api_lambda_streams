@@ -1,0 +1,121 @@
+<html>
+<head>
+<title>HomeController.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #0033b3;}
+.s1 { color: #080808;}
+.s2 { color: #8c8c8c; font-style: italic;}
+.s3 { color: #067d17;}
+.s4 { color: #0037a6;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+HomeController.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">at.ac.fhcampuswien.fhmdb;</span>
+
+<span class="s0">import </span><span class="s1">at.ac.fhcampuswien.fhmdb.models.Genre;</span>
+<span class="s0">import </span><span class="s1">at.ac.fhcampuswien.fhmdb.models.Movie;</span>
+<span class="s0">import </span><span class="s1">at.ac.fhcampuswien.fhmdb.ui.MovieCell;</span>
+<span class="s0">import </span><span class="s1">com.jfoenix.controls.JFXButton;</span>
+<span class="s0">import </span><span class="s1">com.jfoenix.controls.JFXComboBox;</span>
+<span class="s0">import </span><span class="s1">com.jfoenix.controls.JFXListView;</span>
+<span class="s0">import </span><span class="s1">javafx.collections.FXCollections;</span>
+<span class="s0">import </span><span class="s1">javafx.collections.ObservableList;</span>
+<span class="s0">import </span><span class="s1">javafx.fxml.FXML;</span>
+<span class="s0">import </span><span class="s1">javafx.fxml.Initializable;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.TextField;</span>
+
+<span class="s0">import </span><span class="s1">java.io.FileNotFoundException;</span>
+<span class="s0">import </span><span class="s1">java.io.FileReader;</span>
+<span class="s0">import </span><span class="s1">java.net.URL;</span>
+<span class="s0">import </span><span class="s1">java.util.List;</span>
+<span class="s0">import </span><span class="s1">java.util.ResourceBundle;</span>
+<span class="s0">import </span><span class="s1">java.util.stream.Collectors;</span>
+
+<span class="s0">public class </span><span class="s1">HomeController </span><span class="s0">implements </span><span class="s1">Initializable {</span>
+    <span class="s1">@FXML</span>
+    <span class="s0">public </span><span class="s1">JFXButton searchBtn;</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">public </span><span class="s1">TextField searchField;</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">public </span><span class="s1">JFXListView movieListView;</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">public </span><span class="s1">JFXComboBox genreComboBox;</span>
+
+    <span class="s1">@FXML</span>
+    <span class="s0">public </span><span class="s1">JFXButton sortBtn;</span>
+
+    <span class="s0">public </span><span class="s1">List&lt;Movie&gt; allMovies;</span>
+    <span class="s2">// Call initializeMovies method with a FileReader object as parameter for better testing possibilities</span>
+    <span class="s1">{</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">allMovies = Movie.initializeMovies(</span><span class="s0">new </span><span class="s1">FileReader(</span><span class="s3">&quot;src</span><span class="s4">\\</span><span class="s3">main</span><span class="s4">\\</span><span class="s3">resources</span><span class="s4">\\</span><span class="s3">at</span><span class="s4">\\</span><span class="s3">ac</span><span class="s4">\\</span><span class="s3">fhcampuswien</span><span class="s4">\\</span><span class="s3">fhmdb</span><span class="s4">\\</span><span class="s3">DummyMovies.txt&quot;</span><span class="s1">));</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(FileNotFoundException e) {</span>
+            <span class="s0">throw new </span><span class="s1">RuntimeException(e);</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public </span><span class="s1">List&lt;Movie&gt; filterMovies(String query, Genre genre) {</span>
+        <span class="s0">return </span><span class="s1">allMovies.stream()</span>
+                <span class="s1">.filter(movie -&gt; (query == </span><span class="s0">null </span><span class="s1">|| movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||</span>
+                        <span class="s1">movie.getDescription().toLowerCase().contains(query.toLowerCase())) &amp;&amp;</span>
+                        <span class="s1">(genre == </span><span class="s0">null </span><span class="s1">|| movie.getGenres().contains(genre)))</span>
+                <span class="s1">.collect(Collectors.toList());</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private final </span><span class="s1">ObservableList&lt;Movie&gt; observableMovies = FXCollections.observableArrayList();   </span><span class="s2">// automatically updates corresponding UI elements when underlying data changes</span>
+
+    <span class="s0">public </span><span class="s1">HomeController() </span><span class="s0">throws </span><span class="s1">FileNotFoundException {</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">setAllMovies(List&lt;Movie&gt; allMovies) {</span>
+            <span class="s0">this</span><span class="s1">.allMovies = allMovies;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">initialize(URL url, ResourceBundle resourceBundle) {</span>
+        <span class="s2">// adds all dummy data movies to the observable list</span>
+        <span class="s1">observableMovies.addAll(allMovies);</span>
+
+        <span class="s2">// initialize UI stuff</span>
+        <span class="s1">movieListView.setItems(observableMovies);   </span><span class="s2">// set data of observable list to list view</span>
+        <span class="s1">movieListView.setCellFactory(movieListView -&gt; </span><span class="s0">new </span><span class="s1">MovieCell()); </span><span class="s2">// use custom cell factory to display data</span>
+
+        <span class="s2">// Add genre items to the genreComboBox</span>
+        <span class="s1">genreComboBox.setPromptText(</span><span class="s3">&quot;Filter by Genre&quot;</span><span class="s1">);</span>
+        <span class="s1">genreComboBox.getItems().addAll(Genre.values());</span>
+
+        <span class="s2">// TODO add event handlers to buttons and call the regarding methods</span>
+
+        <span class="s1">searchBtn.setOnAction(actionEvent -&gt; {</span>
+            <span class="s1">String query = searchField.getText();</span>
+            <span class="s1">Genre genre = (Genre) genreComboBox.getSelectionModel().getSelectedItem();</span>
+            <span class="s1">List&lt;Movie&gt; filteredMovies = filterMovies(query, genre);</span>
+            <span class="s1">observableMovies.clear();</span>
+            <span class="s1">observableMovies.addAll(filteredMovies);</span>
+        <span class="s1">});</span>
+
+        <span class="s2">// Sort button example:</span>
+        <span class="s1">sortBtn.setOnAction(actionEvent -&gt; {</span>
+            <span class="s0">if</span><span class="s1">(sortBtn.getText().equals(</span><span class="s3">&quot;Sort (asc)&quot;</span><span class="s1">)) {</span>
+                <span class="s2">// TODO sort observableMovies ascending</span>
+                <span class="s1">sortBtn.setText(</span><span class="s3">&quot;Sort (desc)&quot;</span><span class="s1">);</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s2">// TODO sort observableMovies descending</span>
+                <span class="s1">sortBtn.setText(</span><span class="s3">&quot;Sort (asc)&quot;</span><span class="s1">);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

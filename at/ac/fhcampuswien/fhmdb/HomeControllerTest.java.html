@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>HomeControllerTest.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #0033b3;}
+.s1 { color: #080808;}
+.s2 { color: #8c8c8c; font-style: italic;}
+.s3 { color: #067d17;}
+.s4 { color: #1750eb;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+HomeControllerTest.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">at.ac.fhcampuswien.fhmdb;</span>
+
+<span class="s0">import </span><span class="s1">at.ac.fhcampuswien.fhmdb.models.Genre;</span>
+<span class="s0">import </span><span class="s1">at.ac.fhcampuswien.fhmdb.models.Movie;</span>
+<span class="s0">import </span><span class="s1">org.junit.Test;</span>
+
+<span class="s0">import </span><span class="s1">java.io.FileNotFoundException;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList;</span>
+<span class="s0">import </span><span class="s1">java.util.Arrays;</span>
+<span class="s0">import </span><span class="s1">java.util.List;</span>
+
+<span class="s0">import static </span><span class="s1">org.junit.jupiter.api.Assertions.assertEquals;</span>
+
+
+
+<span class="s0">public class </span><span class="s1">HomeControllerTest {</span>
+    <span class="s2">// TODO implement unittests for the HomeController class -&gt; TDD</span>
+
+    <span class="s1">@Test</span>
+    <span class="s0">public void </span><span class="s1">filterMovies() </span><span class="s0">throws </span><span class="s1">FileNotFoundException {</span>
+        <span class="s2">// Create a list of movies</span>
+        <span class="s1">List&lt;Movie&gt; allMovies = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;();</span>
+        <span class="s1">allMovies.add(</span><span class="s0">new </span><span class="s1">Movie(</span><span class="s3">&quot;Movie 1&quot;</span><span class="s1">, </span><span class="s3">&quot;Description 1&quot;</span><span class="s1">, Arrays.asList(Genre.ACTION, Genre.DRAMA)));</span>
+        <span class="s1">allMovies.add(</span><span class="s0">new </span><span class="s1">Movie(</span><span class="s3">&quot;Movie 2&quot;</span><span class="s1">, </span><span class="s3">&quot;Description 2&quot;</span><span class="s1">, Arrays.asList(Genre.COMEDY, Genre.DRAMA)));</span>
+        <span class="s1">allMovies.add(</span><span class="s0">new </span><span class="s1">Movie(</span><span class="s3">&quot;Movie 3&quot;</span><span class="s1">, </span><span class="s3">&quot;Description 3&quot;</span><span class="s1">, Arrays.asList(Genre.ACTION, Genre.COMEDY)));</span>
+
+        <span class="s2">// Create HomeController and set allMovies</span>
+        <span class="s1">HomeController homeController = </span><span class="s0">new </span><span class="s1">HomeController();</span>
+        <span class="s1">homeController.setAllMovies(allMovies);</span>
+
+        <span class="s2">// Call filterMovies with query and genre</span>
+        <span class="s1">List&lt;Movie&gt; filteredMovies = homeController.filterMovies(</span><span class="s3">&quot;1&quot;</span><span class="s1">, Genre.ACTION);</span>
+
+        <span class="s2">// Check if the filtered list contains the correct movies</span>
+        <span class="s1">assertEquals(</span><span class="s4">1</span><span class="s1">, filteredMovies.size());</span>
+        <span class="s1">assertEquals(</span><span class="s3">&quot;Movie 1&quot;</span><span class="s1">, filteredMovies.get(</span><span class="s4">0</span><span class="s1">).getTitle());</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>
