@@ -11,12 +11,17 @@ public class Movie {
     private String title;
     private String description;
 
+    private int releaseYear; // new attribute
+    private double rating; // new attribute
+
     private List<Genre> genres;
 
     public Movie(String title, String description, List<Genre> genres) {
         this.title = title;
         this.description = description;
         this.genres = genres;
+        this.releaseYear = releaseYear; // initialize new attribute
+        this.rating = rating; // initialize new attribute
     }
 
     public String getTitle() {
@@ -29,6 +34,16 @@ public class Movie {
 
     public List<Genre> getGenres() {
         return genres;
+    }
+
+
+    // getters for new attributes
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public double getRating() {
+        return rating;
     }
 
     public static List<Movie> initializeMovies(FileReader fileReader){

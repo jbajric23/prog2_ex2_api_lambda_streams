@@ -6,11 +6,15 @@ import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import org.controlsfx.control.CheckComboBox;
+
+
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 import java.io.FileNotFoundException;
@@ -33,6 +37,16 @@ public class HomeController implements Initializable {
 
     @FXML
     public JFXComboBox genreComboBox;
+
+
+
+    @FXML
+    private CheckComboBox releaseYearBox;
+
+    @FXML
+    private ComboBox ratingFromBox;
+
+
 
     @FXML
     public JFXButton sortBtn;
@@ -91,6 +105,11 @@ public class HomeController implements Initializable {
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Genre.values());
 
+        //releaseYearBox.setPromptText("Filter by Release Year...");
+        //releaseYearBox.getItems().addAll(Genre.values());
+
+        ratingFromBox.setPromptText("Filter by Rating");
+        //ratingFromBox.getItems().addAll(Genre.values());
         // TODO add event handlers to buttons and call the regarding methods
 
         searchBtn.setOnAction(actionEvent -> {
@@ -113,6 +132,8 @@ public class HomeController implements Initializable {
             observableMovies.addAll(allMovies);
 
             searchField.clear();
+            //ratingFromBox.clear();
+            //releaseYearBox.clear();
         });
 
         // Sort button for listing the movies in alphabetical order; either descending or ascending
