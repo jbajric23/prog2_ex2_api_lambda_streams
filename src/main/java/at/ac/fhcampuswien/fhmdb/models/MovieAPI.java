@@ -22,21 +22,32 @@ public class MovieAPI {
         this.gson = new Gson();
     }
 
-    public List<Movie> loadMovies() throws IOException {
+    public List<Movie> callAPI(String filter) throws IOException {
         List<Movie> movies = new ArrayList<>();
-        Request request = new Request.Builder()
-                .url("https://prog2.fh-campuswien.ac.at/movies")
-                .header("User-Agent", "FHMDB-App")
-                .build();
+        Request request;
+        if (filter != null) {
+             request = new Request.Builder()
+                    .url("https://prog2.fh-campuswien.ac.at/movies" + filter)
+                    .header("User-Agent", "FHMDB-App")
+                    .build();
+        } else {
+            request = new Request.Builder()
+                    .url("https://prog2.fh-campuswien.ac.at/movies")
+                    .header("User-Agent", "FHMDB-App")
+                    .build();
+        }
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Movie Data could not be loaded. " + response);
+            if (!response.isSuccessful()) throw new IOException("Movie data could not be loaded. " + response);
             JsonArray jsonArray = gson.fromJson(response.body().string(), JsonArray.class);
+            return loadMovies(movies, jsonArray);
+        }
+    }
+
+    public List<Movie> loadMovies(List<Movie> movies, JsonArray jsonArray) {
             for (int i = 0; i < jsonArray.size(); i++) {
-                // movies.add(gson.fromJson(jsonArray.get(i), Movie.class));
                 JsonObject movieElement = jsonArray.get(i).getAsJsonObject();
                 movies.add(createMovie(movieElement));
             }
-        }
         return movies;
     }
 

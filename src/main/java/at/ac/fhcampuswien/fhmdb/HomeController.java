@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -60,9 +61,8 @@ public class HomeController implements Initializable {
     // Call initializeMovies method with a FileReader object as parameter for better testing possibilities
     {
         try {
-            // allMovies = Movie.initializeMovies(new FileReader("src/main/resources/at/ac/fhcampuswien/fhmdb/DummyMovies.txt"));
             MovieAPI apiMovies = new MovieAPI();
-            allMovies = apiMovies.loadMovies();
+            allMovies = apiMovies.callAPI(null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -74,6 +74,34 @@ public class HomeController implements Initializable {
                         movie.getDescription().toLowerCase().contains(query.toLowerCase())) &&
                         (genre == null || movie.getGenres().contains(genre)))
                 .collect(Collectors.toList());
+    }
+
+    public List<Movie> filterMoviesWithAPI(String query, Genre genre) throws RuntimeException{
+        String urlParam = queryStringGenerator(query, genre);
+        try {
+            MovieAPI apiMovies = new MovieAPI();
+            List<Movie> testmovies = apiMovies.callAPI(urlParam);
+            return testmovies.stream()
+                    .filter(movie -> (query == null || movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                            movie.getDescription().toLowerCase().contains(query.toLowerCase())) &&
+                            (genre == null || movie.getGenres().contains(genre)))
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String queryStringGenerator(String query, Genre genre) {
+        String queryStart = "?";
+        String urlParam;
+        if (query != null && genre == null) {
+            urlParam = queryStart + "title=" + query;
+        } else if (Objects.equals(query, "") && genre != null) {
+            urlParam = queryStart + "genre=" + genre;
+        } else {
+            urlParam = queryStart + "title=" + query + "&genre=" + genre;
+        }
+        return urlParam;
     }
 
     public final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
@@ -119,7 +147,7 @@ public class HomeController implements Initializable {
         searchBtn.setOnAction(actionEvent -> {
             String query = searchField.getText();
             Genre genre = (Genre) genreComboBox.getSelectionModel().getSelectedItem();
-            List<Movie> filteredMovies = filterMovies(query, genre);
+            List<Movie> filteredMovies = filterMoviesWithAPI(query, genre);
             observableMovies.clear();
             observableMovies.addAll(filteredMovies);
 
@@ -136,6 +164,10 @@ public class HomeController implements Initializable {
             observableMovies.addAll(allMovies);
 
             searchField.clear();
+            // Handle the reset of the genreComboBox
+            genreComboBox.getItems().clear();
+            genreComboBox.setPromptText("Filter by Genre");
+            genreComboBox.getItems().addAll(Genre.values());
             //ratingFromBox.clear();
             //releaseYearBox.clear();
         });
