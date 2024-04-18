@@ -8,19 +8,26 @@ import java.io.IOException;
 
 
 public class Movie {
+
     private String title;
     private String description;
 
     private int releaseYear; // new attribute
-    private double rating; // new attribute
+    private float rating; // new attribute
+
+    private int lengthInMinutes; // new attribute
 
     private List<Genre> genres;
+    private List<String> directors;
+    private List<String> writers;
+    private List<String> mainCast;
 
-    public Movie(String title, String description, List<Genre> genres) {
+    public Movie(String title,String description,List<Genre> genres, int releaseYear, float rating){
         this.title = title;
         this.description = description;
         this.genres = genres;
-        this.releaseYear = releaseYear; // initialize new attribute
+        // Check if new attributes should be initialized here
+        this.releaseYear = releaseYear;// initialize new attribute
         this.rating = rating; // initialize new attribute
     }
 
@@ -36,16 +43,48 @@ public class Movie {
         return genres;
     }
 
-
     // getters for new attributes
     public int getReleaseYear() {
         return releaseYear;
     }
 
-    public double getRating() {
+    public float getRating() {
         return rating;
     }
 
+    public int getLengthInMinutes() {
+        return lengthInMinutes;
+    }
+
+    public void setLengthInMinutes(int lengthInMinutes) {
+        this.lengthInMinutes = lengthInMinutes;
+    }
+
+    public List<String> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(List<String> directors) {
+        this.directors = directors;
+    }
+
+    public void setWriters(List<String> writers) {
+        this.writers = writers;
+    }
+
+    public List<String> getWriters() {
+        return writers;
+    }
+
+    public void setMainCast(List<String> mainCast) {
+        this.mainCast = mainCast;
+    }
+
+    public List<String> getMainCast() {
+        return mainCast;
+    }
+
+    /*
     public static List<Movie> initializeMovies(FileReader fileReader){
 
         List<Movie> movies = new ArrayList<>();
@@ -82,6 +121,6 @@ public class Movie {
         }
         return movies;
     }
-
+*/
 
 }
