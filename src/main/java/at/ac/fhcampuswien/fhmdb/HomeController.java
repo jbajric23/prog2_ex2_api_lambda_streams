@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -19,6 +20,7 @@ import javafx.scene.control.TextField;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
@@ -58,8 +60,10 @@ public class HomeController implements Initializable {
     // Call initializeMovies method with a FileReader object as parameter for better testing possibilities
     {
         try {
-            allMovies = Movie.initializeMovies(new FileReader("src/main/resources/at/ac/fhcampuswien/fhmdb/DummyMovies.txt"));
-        } catch (FileNotFoundException e) {
+            // allMovies = Movie.initializeMovies(new FileReader("src/main/resources/at/ac/fhcampuswien/fhmdb/DummyMovies.txt"));
+            MovieAPI apiMovies = new MovieAPI();
+            allMovies = apiMovies.loadMovies();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
