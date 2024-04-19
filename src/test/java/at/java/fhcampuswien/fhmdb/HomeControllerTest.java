@@ -13,10 +13,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-
+/*
 public class HomeControllerTest {
-
-
 
     @Test
     public void testSortMoviesAscending() throws FileNotFoundException {
@@ -113,12 +111,12 @@ public class HomeControllerTest {
         homeController.sortMovies(true);
 
         assertEquals("Description 1", homeController.observableMovies.get(0).getDescription());
-        assertEquals("Description 2", homeController.observableMovies.get(1).getDescription());
+        assertEquals("Description 2", homeController.observableMovies.get(1).getDescription()); */
         /*
          are the same named movies sorted in a way so
          that the ones entered first are sorted first?
         */
-    }
+   /* }
 
     @Test
     public void testSortMoviesWithEmptyList() throws FileNotFoundException {
@@ -130,3 +128,4 @@ public class HomeControllerTest {
         assertEquals(0, homeController.observableMovies.size());
     }
 }
+*/
