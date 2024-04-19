@@ -38,7 +38,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>
@@ -51,8 +50,6 @@
             <artifactId>controlsfx</artifactId>
             <version>11.2.1</version>
         </dependency>
-
-
 
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
