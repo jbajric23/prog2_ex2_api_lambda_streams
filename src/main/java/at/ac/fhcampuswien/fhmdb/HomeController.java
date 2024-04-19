@@ -84,7 +84,6 @@ public class HomeController implements Initializable {
                 .count();
     }
 
-
     public List<Movie> getMoviesBetweenYearsFromAPI(List<Movie> movies, int startYear, int endYear) {
         return movies.stream()
                 .filter(movie -> movie.getReleaseYear() >= startYear && movie.getReleaseYear() <= endYear)
