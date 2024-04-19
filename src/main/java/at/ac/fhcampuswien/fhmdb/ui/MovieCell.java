@@ -13,7 +13,7 @@ import javafx.scene.text.FontWeight;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+//class done with quite a bit of ChatGPT help because of performance issues
 public class MovieCell extends ListCell<Movie> {
 
     private final ImageView movieImage = new ImageView();
@@ -30,6 +30,7 @@ public class MovieCell extends ListCell<Movie> {
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
+        //This is a method that is called whenever the cell needs to be updated
         super.updateItem(movie, empty);
 
         if (empty || movie == null) {
@@ -42,6 +43,7 @@ public class MovieCell extends ListCell<Movie> {
         }
     }
     private void updateTextLayout(Movie movie) {
+        //This method updates the text layout with the movie information
         textLayout.getChildren().clear();
 
         Label titleLabel = createStyledLabel(movie.getTitle(), 20, "-fx-text-fill: #FFD700;"); // Yellow for title
@@ -59,6 +61,7 @@ public class MovieCell extends ListCell<Movie> {
     }
 
     private Label createStyledLabel(String text, double fontSize, String style) {
+        //this method creates a label with the given text, font size and style
         Label label = new Label(text);
         label.setFont(Font.font("Arial", FontWeight.NORMAL, fontSize));
         label.setStyle(style);
@@ -66,6 +69,7 @@ public class MovieCell extends ListCell<Movie> {
     }
 
     private void loadImage(String imageUrl) {
+        //This method loads the image from the given URL
         Image image = imageCache.get(imageUrl);
         if (image == null) {
             image = new Image(imageUrl, true); // Load in background

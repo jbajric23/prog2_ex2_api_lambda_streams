@@ -100,6 +100,7 @@ public class HomeController implements Initializable {
     }
 
     public List<Movie> filterMoviesWithAPI(String query, Genre genre, Integer releaseYear, Double rating) throws RuntimeException{
+        //this method filters the movies based on the given parameters
         String urlParam = queryStringGenerator(query, genre, releaseYear, rating);
         try {
             MovieAPI apiMovies = new MovieAPI();
@@ -118,6 +119,7 @@ public class HomeController implements Initializable {
     }
 
     protected String queryStringGenerator(String query, Genre genre, Integer releaseYear, Double rating) {
+        //this method generates the query string for the API call
         String queryStart = "?";
         String urlParam = queryStart;
 
@@ -183,7 +185,6 @@ public class HomeController implements Initializable {
             ratingFromBox.getItems().add(i);
         }
 
-        // TODO add event handlers to buttons and call the regarding methods
 
         searchBtn.setOnAction(actionEvent -> {
             System.out.println("Filter button clicked"); // Debug output
