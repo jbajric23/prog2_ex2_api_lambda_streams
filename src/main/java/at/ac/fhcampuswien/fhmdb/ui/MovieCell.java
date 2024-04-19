@@ -23,8 +23,8 @@ public class MovieCell extends ListCell<Movie> {
 
     private final HBox directorAndCast = new HBox(director, mainCast, writers); // HBox for director, cast and writers
     private final BorderPane titleAndRating = new BorderPane();
-    private final HBox releaseYearAndLength = new HBox(releaseYear, lengthInMinutes); // HBox for release year and length in minutes
-    private final VBox attributes = new VBox(titleAndRating, directorAndCast, detail, releaseYearAndLength); // VBox for other attributes
+    private final HBox genresReleaseYearAndLength = new HBox(genres, releaseYear, lengthInMinutes); // HBox for release year and length in minutes
+    private final VBox attributes = new VBox(titleAndRating, directorAndCast, detail, genresReleaseYearAndLength); // VBox for other attributes
     private final HBox layout = new HBox(movieImage, attributes); // HBox for image and other attributes
 
 
@@ -85,7 +85,7 @@ public class MovieCell extends ListCell<Movie> {
 
             // Set spacing for HBoxes
             directorAndCast.setSpacing(20);
-            releaseYearAndLength.setSpacing(20);
+            genresReleaseYearAndLength.setSpacing(20);
             attributes.setSpacing(20);
             layout.setSpacing(20);
 
