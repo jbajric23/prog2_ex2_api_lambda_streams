@@ -10,7 +10,11 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class MovieAPI {
@@ -20,6 +24,33 @@ public class MovieAPI {
     public MovieAPI() {
         this.client = new OkHttpClient();
         this.gson = new Gson();
+    }
+
+    public List<String> getDirectorFromAPI(Movie movie) {
+        return movie.getDirectors();
+    }
+
+    public String getMostPopularActorFromAPI(List<Movie> movies) {
+        return movies.stream()
+                .flatMap(movie -> movie.getMainCast().stream())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    public String getLongestMovieTitleFromAPI(List<Movie> movies) {
+        return movies.stream()
+                .map(Movie::getTitle)
+                .max(Comparator.comparingInt(String::length))
+                .orElse(null);
+    }
+
+    public List<Movie> getMoviesBetweenYearsFromAPI(List<Movie> movies, int startYear, int endYear) {
+        return movies.stream()
+                .filter(movie -> movie.getReleaseYear() >= startYear && movie.getReleaseYear() <= endYear)
+                .collect(Collectors.toList());
     }
 
     public List<Movie> callAPI(String filter) throws IOException {

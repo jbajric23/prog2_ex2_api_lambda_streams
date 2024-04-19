@@ -20,10 +20,8 @@ import org.controlsfx.control.CheckComboBox;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
@@ -67,6 +65,32 @@ public class HomeController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    // David
+    public String getMostPopularActor(List<Movie> movies) {
+        MovieAPI movieAPI = new MovieAPI();
+        return movieAPI.getMostPopularActorFromAPI(movies);
+    }
+
+    public String getLongestMovieTitle(List<Movie> movies) {
+        MovieAPI movieAPI = new MovieAPI();
+        return movieAPI.getLongestMovieTitleFromAPI(movies);
+    }
+
+    public long countMoviesFrom(List<Movie> movies, String director) {
+        MovieAPI movieAPI = new MovieAPI();
+        return movies.stream()
+                .filter(movie -> movieAPI.getDirectorFromAPI(movie).equals(director))
+                .count();
+    }
+
+
+    public List<Movie> getMoviesBetweenYearsFromAPI(List<Movie> movies, int startYear, int endYear) {
+        return movies.stream()
+                .filter(movie -> movie.getReleaseYear() >= startYear && movie.getReleaseYear() <= endYear)
+                .collect(Collectors.toList());
+    }
+    // David
 
     public List<Movie> filterMovies(String query, Genre genre) {
         return allMovies.stream()
