@@ -1,29 +1,21 @@
 package at.ac.fhcampuswien.fhmdb.ui;
 
 import at.ac.fhcampuswien.fhmdb.models.Movie;
-import javafx.concurrent.Task;
-import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MovieCell extends ListCell<Movie> {
-    private final Label title = new Label();
-    private final Label releaseYear = new Label();
-    private final Label detail = new Label();
-    private final Label genres = new Label();
-    private final Label rating = new Label();
-    private final Label director = new Label();
-    private final Label mainCast = new Label();
-    private final Label writers = new Label();
-    private final Label lengthInMinutes = new Label();
+
     private final ImageView movieImage = new ImageView();
     private final HBox layout = new HBox();
     private final VBox textLayout = new VBox();
@@ -33,10 +25,8 @@ public class MovieCell extends ListCell<Movie> {
         movieImage.setFitWidth(100);
         movieImage.setPreserveRatio(true);
         layout.getChildren().addAll(movieImage, textLayout);
-        textLayout.setSpacing(4);  // spacing between text items
+        textLayout.setFillWidth(true);
     }
-
-
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
@@ -53,25 +43,37 @@ public class MovieCell extends ListCell<Movie> {
     }
     private void updateTextLayout(Movie movie) {
         textLayout.getChildren().clear();
-        textLayout.getChildren().addAll(
-                new Label(movie.getTitle()),
-                new Label("Director: " + String.join(", ", movie.getDirectors())),
-                new Label("Main Cast: " + String.join(", ", movie.getMainCast())),
-                new Label("Release: " + movie.getReleaseYear()),
-                new Label("Rating: " + String.format("%.2f", movie.getRating())),
-                new Label("Length: " + movie.getLengthInMinutes() + " min"),
-                new Label("Genres: " + String.join(", ", movie.getGenres().toString()))
-        );
+
+        Label titleLabel = createStyledLabel(movie.getTitle(), 20, "-fx-text-fill: #FFD700;"); // Yellow for title
+        Label directorLabel = createStyledLabel("Director: " + String.join(", ", movie.getDirectors()), 12, "-fx-text-fill: white;");
+        Label mainCastLabel = createStyledLabel("Main Cast: " + String.join(", ", movie.getMainCast()), 12, "-fx-text-fill: white;");
+        Label releaseYearLabel = createStyledLabel("Release: " + movie.getReleaseYear(), 12, "-fx-text-fill: white;");
+        Label ratingLabel = createStyledLabel("Rating: " + String.format("%.2f", movie.getRating()), 12, "-fx-text-fill: white;");
+        Label lengthLabel = createStyledLabel("Length: " + movie.getLengthInMinutes() + " min", 12, "-fx-text-fill: white;");
+        String genresText = movie.getGenres().stream().map(Enum::name).collect(Collectors.joining(", "));
+        Label genresLabel = createStyledLabel("Genres: " + genresText, 12, "-fx-text-fill: white;");
+        Label descriptionLabel = createStyledLabel(movie.getDescription(), 12, "-fx-text-fill: white;");
+        descriptionLabel.setWrapText(true);
+
+        textLayout.getChildren().addAll(titleLabel, directorLabel, mainCastLabel, releaseYearLabel, ratingLabel, lengthLabel, genresLabel, descriptionLabel);
+    }
+
+    private Label createStyledLabel(String text, double fontSize, String style) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Arial", FontWeight.NORMAL, fontSize));
+        label.setStyle(style);
+        return label;
     }
 
     private void loadImage(String imageUrl) {
         Image image = imageCache.get(imageUrl);
         if (image == null) {
-            image = new Image(imageUrl, true);  // Load in background
+            image = new Image(imageUrl, true); // Load in background
             imageCache.put(imageUrl, image);
         }
         movieImage.setImage(image);
     }
-    }
+}
+
 
 
