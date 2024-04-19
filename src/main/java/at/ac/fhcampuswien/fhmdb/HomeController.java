@@ -40,12 +40,12 @@ public class HomeController implements Initializable {
 
 
     @FXML
-    private CheckComboBox releaseYearBox;
+    CheckComboBox releaseYearBox;
     @FXML
     private Label releaseYearLabel;
 
     @FXML
-    private ComboBox ratingFromBox;
+    ComboBox ratingFromBox;
 
 
 
@@ -117,7 +117,7 @@ public class HomeController implements Initializable {
         }
     }
 
-    private String queryStringGenerator(String query, Genre genre, Integer releaseYear, Double rating) {
+    protected String queryStringGenerator(String query, Genre genre, Integer releaseYear, Double rating) {
         String queryStart = "?";
         String urlParam = queryStart;
 
@@ -137,7 +137,7 @@ public class HomeController implements Initializable {
         return urlParam;
     }
 
-    public final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+    public ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     public HomeController() throws FileNotFoundException {
     }
