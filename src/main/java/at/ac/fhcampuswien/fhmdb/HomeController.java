@@ -80,8 +80,9 @@ public class HomeController implements Initializable {
         String urlParam = queryStringGenerator(query, genre, releaseYear, rating);
         try {
             MovieAPI apiMovies = new MovieAPI();
-            List<Movie> testmovies = apiMovies.callAPI(urlParam);
-            return testmovies.stream()
+            List<Movie>testMovies = apiMovies.callAPI(urlParam);
+            System.out.println("Received response: " + testMovies); // Debug-Ausgabe
+            return testMovies.stream()
                     .filter(movie -> (query == null || movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
                             movie.getDescription().toLowerCase().contains(query.toLowerCase())) &&
                             (genre == null || movie.getGenres().contains(genre)) &&
@@ -109,6 +110,7 @@ public class HomeController implements Initializable {
         if (rating != null) {
             urlParam += (urlParam.length() > 1 ? "&" : "") + "rating=" + rating;
         }
+        System.out.println("Generated URL: " + urlParam); // Debug
         return urlParam;
     }
 
@@ -161,13 +163,27 @@ public class HomeController implements Initializable {
         // TODO add event handlers to buttons and call the regarding methods
 
         searchBtn.setOnAction(actionEvent -> {
+            System.out.println("Filter button clicked"); // Debug output
+
             String query = searchField.getText();
+            System.out.println("Query: " + query); // Debug output
+
             Genre genre = (Genre) genreComboBox.getSelectionModel().getSelectedItem();
+            System.out.println("Genre: " + genre); // Debug output
+
             List<Integer> releaseYears = releaseYearBox.getCheckModel().getCheckedItems();
-            Double rating = (Double) ratingFromBox.getSelectionModel().getSelectedItem();
+            Integer ratingValue = (Integer) ratingFromBox.getSelectionModel().getSelectedItem();
+            Double rating = null;
+            if (ratingValue != null) {
+                rating = ratingValue.doubleValue();
+            }
             List<Movie> filteredMovies = new ArrayList<>();
-            for (Integer year : releaseYears) {
-                filteredMovies.addAll(filterMoviesWithAPI(query, genre, year, rating));
+            if (releaseYears.isEmpty()) {
+                filteredMovies.addAll(filterMoviesWithAPI(query, genre, null, rating));
+            } else {
+                for (Integer year : releaseYears) {
+                    filteredMovies.addAll(filterMoviesWithAPI(query, genre, year, rating));
+                }
             }
             filteredMovies = filteredMovies.stream().distinct().collect(Collectors.toList());
             observableMovies.clear();
