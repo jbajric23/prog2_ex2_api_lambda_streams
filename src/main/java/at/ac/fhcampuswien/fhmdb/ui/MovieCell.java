@@ -1,65 +1,83 @@
 package at.ac.fhcampuswien.fhmdb.ui;
 
 import at.ac.fhcampuswien.fhmdb.models.Movie;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+//class done with quite a bit of ChatGPT help because of performance issues
 public class MovieCell extends ListCell<Movie> {
-    private final Label title = new Label();
-    private final Label detail = new Label();
-    private final Label genres = new Label();
-    private final VBox layout = new VBox(title, detail, genres);
+
+    private final ImageView movieImage = new ImageView();
+    private final HBox layout = new HBox();
+    private final VBox textLayout = new VBox();
+    private static final Map<String, Image> imageCache = new HashMap<>();
+
+    public MovieCell() {
+        movieImage.setFitWidth(100);
+        movieImage.setPreserveRatio(true);
+        layout.getChildren().addAll(movieImage, textLayout);
+        textLayout.setFillWidth(true);
+    }
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
+        //This is a method that is called whenever the cell needs to be updated
         super.updateItem(movie, empty);
 
         if (empty || movie == null) {
             setText(null);
             setGraphic(null);
         } else {
-            this.getStyleClass().add("movie-cell");
-            title.setText(movie.getTitle());
-            detail.setText(
-                    movie.getDescription() != null
-                            ? movie.getDescription()
-                            : "No description available"
-            );
-            // set the genres text in the ui
-            genres.setText(
-                    movie.getGenres() != null
-                            ? movie.getGenres().toString()
-                            : "No genres available"
-            );
-
-            // color scheme
-            title.getStyleClass().add("text-yellow");
-            detail.getStyleClass().add("text-white");
-
-            // Make the genres text display in white
-            genres.getStyleClass().add("text-white");
-            // Remove the brackets from the genres text
-            String genresText = genres.getText();
-            genresText = genresText.replace("[", "");
-            genresText = genresText.replace("]", "");
-            genres.setText(genresText);
-
-            layout.setBackground(new Background(new BackgroundFill(Color.web("#454545"), null, null)));
-
-            // layout
-            title.fontProperty().set(title.getFont().font(20));
-            detail.setMaxWidth(this.getScene().getWidth() - 30);
-            detail.setWrapText(true);
-            layout.setPadding(new Insets(10));
-            layout.spacingProperty().set(10);
-            layout.alignmentProperty().set(javafx.geometry.Pos.CENTER_LEFT);
+            updateTextLayout(movie);
+            loadImage(movie.getImgUrl());
             setGraphic(layout);
         }
     }
+    private void updateTextLayout(Movie movie) {
+        //This method updates the text layout with the movie information
+        textLayout.getChildren().clear();
+
+        Label titleLabel = createStyledLabel(movie.getTitle(), 20, "-fx-text-fill: #FFD700;"); // Yellow for title
+        Label directorLabel = createStyledLabel("Director: " + String.join(", ", movie.getDirectors()), 12, "-fx-text-fill: white;");
+        Label mainCastLabel = createStyledLabel("Main Cast: " + String.join(", ", movie.getMainCast()), 12, "-fx-text-fill: white;");
+        Label releaseYearLabel = createStyledLabel("Release: " + movie.getReleaseYear(), 12, "-fx-text-fill: white;");
+        Label ratingLabel = createStyledLabel("Rating: " + String.format("%.2f", movie.getRating()), 12, "-fx-text-fill: white;");
+        Label lengthLabel = createStyledLabel("Length: " + movie.getLengthInMinutes() + " min", 12, "-fx-text-fill: white;");
+        String genresText = movie.getGenres().stream().map(Enum::name).collect(Collectors.joining(", "));
+        Label genresLabel = createStyledLabel("Genres: " + genresText, 12, "-fx-text-fill: white;");
+        Label descriptionLabel = createStyledLabel(movie.getDescription(), 12, "-fx-text-fill: white;");
+        descriptionLabel.setWrapText(true);
+
+        textLayout.getChildren().addAll(titleLabel, directorLabel, mainCastLabel, releaseYearLabel, ratingLabel, lengthLabel, genresLabel, descriptionLabel);
+    }
+
+    private Label createStyledLabel(String text, double fontSize, String style) {
+        //this method creates a label with the given text, font size and style
+        Label label = new Label(text);
+        label.setFont(Font.font("Arial", FontWeight.NORMAL, fontSize));
+        label.setStyle(style);
+        return label;
+    }
+
+    private void loadImage(String imageUrl) {
+        //This method loads the image from the given URL
+        Image image = imageCache.get(imageUrl);
+        if (image == null) {
+            image = new Image(imageUrl, true); // Load in background
+            imageCache.put(imageUrl, image);
+        }
+        movieImage.setImage(image);
+    }
 }
+
+
 

@@ -1,23 +1,37 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 
 public class Movie {
+
     private String title;
     private String description;
+    private String imgUrl;
+    private int releaseYear; // new attribute
+    private double rating; // new attribute
+
+    private int lengthInMinutes; // new attribute
 
     private List<Genre> genres;
+    private List<String> directors;
+    private List<String> writers;
+    private List<String> mainCast;
 
-    public Movie(String title, String description, List<Genre> genres) {
+    public Movie(String title,String description,List<Genre> genres, int releaseYear, double rating, int lengthInMinutes, List<String> directors, List<String> writers, List<String> mainCast, String imgUrl){
         this.title = title;
         this.description = description;
         this.genres = genres;
+        this.releaseYear = releaseYear;
+        this.rating = rating;
+        this.imgUrl = imgUrl;
+        this.lengthInMinutes = lengthInMinutes;
+        this.directors = directors;
+        this.writers = writers;
+        this.mainCast = mainCast;
     }
+
+
 
     public String getTitle() {
         return title;
@@ -31,6 +45,55 @@ public class Movie {
         return genres;
     }
 
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public int getLengthInMinutes() {
+        return lengthInMinutes;
+    }
+
+    public void setLengthInMinutes(int lengthInMinutes) {
+        this.lengthInMinutes = lengthInMinutes;
+    }
+
+    public List<String> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(List<String> directors) {
+        this.directors = directors;
+    }
+
+    public void setWriters(List<String> writers) {
+        this.writers = writers;
+    }
+
+    public List<String> getWriters() {
+        return writers;
+    }
+
+    public void setMainCast(List<String> mainCast) {
+        this.mainCast = mainCast;
+    }
+
+    public List<String> getMainCast() {
+        return mainCast;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+
+
+
+    /*
     public static List<Movie> initializeMovies(FileReader fileReader){
 
         List<Movie> movies = new ArrayList<>();
@@ -67,6 +130,6 @@ public class Movie {
         }
         return movies;
     }
-
+*/
 
 }
