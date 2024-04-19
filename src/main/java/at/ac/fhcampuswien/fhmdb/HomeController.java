@@ -7,24 +7,22 @@ import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import org.controlsfx.control.CheckComboBox;
-
-
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.controlsfx.control.CheckComboBox;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -45,6 +43,8 @@ public class HomeController implements Initializable {
 
     @FXML
     private CheckComboBox releaseYearBox;
+    @FXML
+    private Label releaseYearLabel;
 
     @FXML
     private ComboBox ratingFromBox;
@@ -76,30 +76,38 @@ public class HomeController implements Initializable {
                 .collect(Collectors.toList());
     }
 
-    public List<Movie> filterMoviesWithAPI(String query, Genre genre) throws RuntimeException{
-        String urlParam = queryStringGenerator(query, genre);
+    public List<Movie> filterMoviesWithAPI(String query, Genre genre, Integer releaseYear, Double rating) throws RuntimeException{
+        String urlParam = queryStringGenerator(query, genre, releaseYear, rating);
         try {
             MovieAPI apiMovies = new MovieAPI();
             List<Movie> testmovies = apiMovies.callAPI(urlParam);
             return testmovies.stream()
                     .filter(movie -> (query == null || movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
                             movie.getDescription().toLowerCase().contains(query.toLowerCase())) &&
-                            (genre == null || movie.getGenres().contains(genre)))
+                            (genre == null || movie.getGenres().contains(genre)) &&
+                            (releaseYear == null || movie.getReleaseYear() == releaseYear) &&
+                            (rating == null || movie.getRating() >= rating))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String queryStringGenerator(String query, Genre genre) {
+    private String queryStringGenerator(String query, Genre genre, Integer releaseYear, Double rating) {
         String queryStart = "?";
-        String urlParam;
-        if (query != null && genre == null) {
-            urlParam = queryStart + "title=" + query;
-        } else if (Objects.equals(query, "") && genre != null) {
-            urlParam = queryStart + "genre=" + genre;
-        } else {
-            urlParam = queryStart + "title=" + query + "&genre=" + genre;
+        String urlParam = queryStart;
+
+        if (query != null) {
+            urlParam += "title=" + query;
+        }
+        if (genre != null) {
+            urlParam += (urlParam.length() > 1 ? "&" : "") + "genre=" + genre;
+        }
+        if (releaseYear != null) {
+            urlParam += (urlParam.length() > 1 ? "&" : "") + "releaseYear=" + releaseYear;
+        }
+        if (rating != null) {
+            urlParam += (urlParam.length() > 1 ? "&" : "") + "rating=" + rating;
         }
         return urlParam;
     }
@@ -128,7 +136,6 @@ public class HomeController implements Initializable {
         // adds all dummy data movies to the observable list
         observableMovies.addAll(allMovies);
 
-
         // initialize UI stuff
         movieListView.setItems(observableMovies);   // set data of observable list to list view
         movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
@@ -137,17 +144,32 @@ public class HomeController implements Initializable {
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Genre.values());
 
-        //releaseYearBox.setPromptText("Filter by Release Year...");
-        //releaseYearBox.getItems().addAll(Genre.values());
+        // Add release years to the releaseYearBox
+        List<Integer> releaseYearList = allMovies.stream()
+                .map(Movie::getReleaseYear)
+                .sorted()
+                .collect(Collectors.toList());
+        releaseYearBox.getItems().addAll(releaseYearList);
+
 
         ratingFromBox.setPromptText("Filter by Rating");
-        //ratingFromBox.getItems().addAll(Genre.values());
+        // Fill the ratingFromBox with values from 0 to 10
+        for (int i = 0; i <= 10; i++) {
+            ratingFromBox.getItems().add(i);
+        }
+
         // TODO add event handlers to buttons and call the regarding methods
 
         searchBtn.setOnAction(actionEvent -> {
             String query = searchField.getText();
             Genre genre = (Genre) genreComboBox.getSelectionModel().getSelectedItem();
-            List<Movie> filteredMovies = filterMoviesWithAPI(query, genre);
+            List<Integer> releaseYears = releaseYearBox.getCheckModel().getCheckedItems();
+            Double rating = (Double) ratingFromBox.getSelectionModel().getSelectedItem();
+            List<Movie> filteredMovies = new ArrayList<>();
+            for (Integer year : releaseYears) {
+                filteredMovies.addAll(filterMoviesWithAPI(query, genre, year, rating));
+            }
+            filteredMovies = filteredMovies.stream().distinct().collect(Collectors.toList());
             observableMovies.clear();
             observableMovies.addAll(filteredMovies);
 
@@ -168,8 +190,10 @@ public class HomeController implements Initializable {
             genreComboBox.getItems().clear();
             genreComboBox.setPromptText("Filter by Genre");
             genreComboBox.getItems().addAll(Genre.values());
-            //ratingFromBox.clear();
-            //releaseYearBox.clear();
+
+            // Reset the releaseYearBox and ratingFromBox
+            releaseYearBox.getCheckModel().clearChecks();
+            ratingFromBox.getSelectionModel().clearSelection();
         });
 
         // Sort button for listing the movies in alphabetical order; either descending or ascending
@@ -182,7 +206,6 @@ public class HomeController implements Initializable {
                 sortBtn.setText("Sort (asc)");
             }
         });
-
 
     }
 }

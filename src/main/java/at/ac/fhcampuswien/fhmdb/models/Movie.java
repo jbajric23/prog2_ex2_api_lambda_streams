@@ -1,19 +1,15 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 
 public class Movie {
 
     private String title;
     private String description;
-
+    private String imgUrl;
     private int releaseYear; // new attribute
-    private float rating; // new attribute
+    private double rating; // new attribute
 
     private int lengthInMinutes; // new attribute
 
@@ -22,14 +18,19 @@ public class Movie {
     private List<String> writers;
     private List<String> mainCast;
 
-    public Movie(String title,String description,List<Genre> genres, int releaseYear, float rating){
+    public Movie(String title,String description,List<Genre> genres, int releaseYear, double rating, int lengthInMinutes, List<String> directors, List<String> writers, List<String> mainCast, String imgUrl){
         this.title = title;
         this.description = description;
         this.genres = genres;
-        // Check if new attributes should be initialized here
-        this.releaseYear = releaseYear;// initialize new attribute
-        this.rating = rating; // initialize new attribute
+        this.releaseYear = releaseYear;
+        this.rating = rating;
+        this.imgUrl = imgUrl;
+        this.lengthInMinutes = lengthInMinutes;
+        this.directors = directors;
+        this.writers = writers;
+        this.mainCast = mainCast;
     }
+
 
     public String getTitle() {
         return title;
@@ -43,12 +44,12 @@ public class Movie {
         return genres;
     }
 
-    // getters for new attributes
+
     public int getReleaseYear() {
         return releaseYear;
     }
 
-    public float getRating() {
+    public double getRating() {
         return rating;
     }
 
@@ -83,6 +84,13 @@ public class Movie {
     public List<String> getMainCast() {
         return mainCast;
     }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+
+
 
     /*
     public static List<Movie> initializeMovies(FileReader fileReader){

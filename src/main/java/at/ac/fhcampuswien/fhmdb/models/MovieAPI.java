@@ -59,8 +59,13 @@ public class MovieAPI {
         JsonElement genresElement = movieArray.get("genres");
         genres = setGenresToList(genresElement);
         int releaseYear = movieArray.get("releaseYear").getAsInt();
-        float rating = movieArray.get("rating").getAsFloat();
-        Movie movie = new Movie(title, description, genres, releaseYear, rating);
+        double rating = movieArray.get("rating").getAsFloat();
+        int lengthInMinutes = movieArray.get("lengthInMinutes").getAsInt();
+        List<String> directors = setListFromJsonElement(movieArray.get("directors"));
+        List<String> writers = setListFromJsonElement(movieArray.get("writers"));
+        List<String> mainCast = setListFromJsonElement(movieArray.get("mainCast"));
+        String imgUrl = movieArray.get("imgUrl").getAsString();
+        Movie movie = new Movie(title, description, genres, releaseYear, rating, lengthInMinutes, directors, writers, mainCast, imgUrl);
         // Initialize other attributes
         movie.setLengthInMinutes(movieArray.get("lengthInMinutes").getAsInt());
         movie.setDirectors(setListFromJsonElement(movieArray.get("directors")));
